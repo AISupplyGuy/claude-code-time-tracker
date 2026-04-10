@@ -1,0 +1,22 @@
+{
+  "projects": [
+    {
+      "name": "My Web App",
+      "match": "my-web-app",
+      "group": "client-acme",
+      "rate": 150
+    },
+    {
+      "name": "Internal Tool",
+      "match": "internal-tool-repo",
+      "group": "client-acme",
+      "rate": 150
+    },
+    {
+      "name": "Personal Blog",
+      "match": "personal-blog",
+      "group": "personal",
+      "rate": null
+    }
+  ]
+}

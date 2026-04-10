@@ -1,0 +1,7 @@
+.DS_Store
+*.swp
+*.bak
+sessions.json
+config.json
+last_activity
+hook-debug.log
