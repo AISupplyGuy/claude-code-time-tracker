@@ -285,8 +285,23 @@ for s in sessions:
         'start': start.strftime('%I:%M %p'),
         'stop': stop.strftime('%I:%M %p'),
         'hours': elapsed,
-        'auto_stopped': s.get('auto_stopped', False)
+        'auto_stopped': s.get('auto_stopped', False),
+        'reads': s.get('reads', 0),
+        'edits': s.get('edits', 0),
+        'bash_calls': s.get('bash_calls', 0),
     })
+
+def classify(reads, edits, bash):
+    total = reads + edits + bash
+    if total == 0:
+        return ''
+    if edits / total >= 0.30:
+        return 'heavy editing'
+    if reads / total >= 0.80 and edits == 0:
+        return 'investigation'
+    if bash / total >= 0.40:
+        return 'tooling'
+    return 'mixed'
 
 if not groups:
     print('No completed sessions found.')
@@ -307,11 +322,26 @@ else:
         for proj in sorted(group_data.keys()):
             pdata = group_data[proj]
             count = len(pdata['sessions'])
-            print(f\"\n  {proj}: {pdata['total']:.2f} hours ({count} sessions)\")
+
+            # Aggregate counters across this project's sessions
+            total_reads = sum(s['reads'] for s in pdata['sessions'])
+            total_edits = sum(s['edits'] for s in pdata['sessions'])
+            total_bash = sum(s['bash_calls'] for s in pdata['sessions'])
+            proj_class = classify(total_reads, total_edits, total_bash)
+            class_label = f' — {proj_class}' if proj_class else ''
+
+            print(f\"\n  {proj}: {pdata['total']:.2f} hours ({count} sessions){class_label}\")
             print('  ' + '-' * 45)
             for sess in pdata['sessions']:
                 auto = ' [auto-stopped]' if sess['auto_stopped'] else ''
-                print(f\"    {sess['date']}  {sess['start']} — {sess['stop']}  ({sess['hours']:.2f}h){auto}\")
+                # Per-session activity breakdown
+                r, e, b = sess['reads'], sess['edits'], sess['bash_calls']
+                tot = r + e + b
+                if tot > 0:
+                    activity = f\"  [{r}r/{e}e/{b}b]\"
+                else:
+                    activity = ''
+                print(f\"    {sess['date']}  {sess['start']} — {sess['stop']}  ({sess['hours']:.2f}h){activity}{auto}\")
 
     if len(groups) > 1 or sum(len(g) for g in groups.values()) > 1:
         print(f\"\n{'=' * 55}\")

@@ -181,6 +181,25 @@ But if you want manual control, the skills are:
 /time-report "Acme Web App" week
 ```
 
+### Activity classification
+
+Each session is automatically tagged with what kind of work it was, based on the ratio of reads / edits / bash calls:
+
+- **heavy editing** — 30%+ of activity was Edit/Write (real coding)
+- **investigation** — 80%+ reads, zero edits (debugging or exploring)
+- **tooling** — 40%+ Bash (npm test, git, deploy commands)
+- **mixed** — none of the above
+
+The report shows a per-session breakdown like `[12r/8e/3b]` (12 reads, 8 edits, 3 bash) so you can see at a glance what each session looked like:
+
+```
+Sales Trainer: 2.30 hours (4 sessions) — heavy editing
+  ---------------------------------------------
+    2026-04-10  09:14 AM — 11:32 AM  (2.30h)  [47r/22e/8b]
+```
+
+This lets you flag investigation-heavy sessions for review (was that real debugging or wandering?) without forcing the system to make billing decisions for you.
+
 ## Configuration
 
 ### Idle timeout

@@ -147,10 +147,36 @@ def main():
             'group': matched_group,
             'start': now_iso,
             'stop': None,
-            'auto_stopped': False
+            'auto_stopped': False,
+            'reads': 0,
+            'edits': 0,
+            'bash_calls': 0,
         })
         save_json(SESSIONS_FILE, sessions)
         debug(f"STARTED timer for {matched_project}")
+
+    # === Increment activity counters on the active session ===
+    # Reload sessions in case we just started a new one
+    sessions = load_json(SESSIONS_FILE, [])
+    active_for_count = None
+    for s in sessions:
+        if s.get('stop') is None:
+            active_for_count = s
+
+    if active_for_count is not None and tool_name:
+        # Make sure counters exist (backward compat for old sessions)
+        active_for_count.setdefault('reads', 0)
+        active_for_count.setdefault('edits', 0)
+        active_for_count.setdefault('bash_calls', 0)
+
+        if tool_name in ('Read', 'Grep', 'Glob'):
+            active_for_count['reads'] += 1
+        elif tool_name in ('Edit', 'Write', 'NotebookEdit'):
+            active_for_count['edits'] += 1
+        elif tool_name == 'Bash':
+            active_for_count['bash_calls'] += 1
+
+        save_json(SESSIONS_FILE, sessions)
 
     final_sessions = load_json(SESSIONS_FILE, [])
     has_active = any(s.get('stop') is None for s in final_sessions)
