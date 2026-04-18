@@ -5,3 +5,5 @@ sessions.json
 config.json
 last_activity
 hook-debug.log
+node_modules/
+app/renderer/*.bundle.js
