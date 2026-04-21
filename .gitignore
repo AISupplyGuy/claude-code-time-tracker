@@ -7,3 +7,8 @@ last_activity
 hook-debug.log
 node_modules/
 app/renderer/*.bundle.js
+
+# Swift Package Manager build artifacts (native/ experiment)
+native/.build/
+native/codex-reviews/
+codex-reviews/
