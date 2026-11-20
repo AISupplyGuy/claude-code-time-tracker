@@ -4,6 +4,8 @@ Automatic, billable time tracking for [Claude Code](https://claude.com/claude-co
 
 **Zero commands required.** Open Claude Code, work on a project, walk away — your hours are tracked.
 
+Built by [Zachary Elbode](https://www.aisupplyguy.net/) (AI Supply Guy).
+
 ## How it works
 
 1. You install the package — adds scripts, skills, and hooks to your Claude Code config.
